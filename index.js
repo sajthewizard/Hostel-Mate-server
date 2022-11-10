@@ -16,7 +16,7 @@ app.use(express.json());
 
 
 const uri = `mongodb+srv://${process.env.BD_USER}:${process.env.DB_PASS}@cluster0.pxpswgp.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri);
+
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 async function run() {
     try {
@@ -34,6 +34,17 @@ async function run() {
             const service = await servicecollection.findOne(query);
             res.send(service);
 
+        })
+        app.get('/reviews', async (req, res) => {
+            let query = {};
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
+            const cursor = reviewcollection.find(query);
+            const review = await cursor.toArray();
+            res.send(review);
         })
         app.post('/reviews', async (req, res) => {
             const review = req.body;
