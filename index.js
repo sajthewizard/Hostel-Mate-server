@@ -28,6 +28,13 @@ async function run() {
             const services = await cursor.toArray();
             res.send(services);
         })
+        app.get('/limservices', async (req, res) => {
+            const query = {}
+            const cursor = servicecollection.find(query);
+            const service = await cursor.limit(3).toArray();
+            res.send(service);
+        })
+
         app.get('/services/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
